@@ -34,11 +34,11 @@ module.exports = {
   resolve: {
     root: __dirname,
     alias: {
-      Main: 'app/components/Main.jsx',
+      components: 'app/components',
+      actions: 'app/actions',
+      reducers: 'app/reducers',
+      store: 'app/store',
       applicationStyle: 'app/styles/app.scss',
-      Navigation: 'app/components/Navigation.jsx',
-      PageOne: 'app/components/PageOne.jsx',
-      PageTwo: 'app/components/PageTwo.jsx',
     },
     extensions: ['', '.js', '.jsx'],
   },
