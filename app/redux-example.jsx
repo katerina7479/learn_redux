@@ -2,18 +2,21 @@ var Redux = require('redux');
 
 console.log('Starting Redux example');
 
-var stateDefault = {
-  name: 'Anonymous',
-  hobbies: [],
-  movies: []
-}
-
+// REDUCERS
 var nameReducer = (state = 'Anonymous', action) => {
   switch (action.type) {
     case 'CHANGE_NAME':
       return action.name
     default:
       return state
+  }
+}
+
+// Action Generators
+var changeName = (name) => {
+  return {
+    type: 'CHANGE_NAME',
+    name
   }
 }
 
@@ -25,9 +28,22 @@ var hobbiesReducer = (state = [], action) => {
         action.hobby
       ]
     case 'REMOVE_HOBBY':
-      return state.filter((hobby) => hobby == action.hobby)
+      return state.filter((hobby) => hobby != action.hobby)
     default:
       return state
+  }
+}
+
+var addHobby = (hobby) => {
+  return {
+    type: 'ADD_HOBBY',
+    hobby
+  }
+}
+var removeHobby = (hobby) => {
+  return {
+    type: 'REMOVE_HOBBY',
+    hobby
   }
 }
 
@@ -36,12 +52,30 @@ var moviesReducer = (state = [], action) => {
     case 'ADD_MOVIE':
       return [
         ...state,
-        action.movie
+        {
+          name: action.name,
+          genre: action.genre
+        }
       ]
     case 'REMOVE_MOVIE':
-      return state.filter((movie) => movie == action.movie)
+      console.log("removing movie", state)
+      return state.filter((movie) => movie.name != action.name)
     default:
       return state
+  }
+}
+
+var addMovie = (name, genre) => {
+  return {
+    type: 'ADD_MOVIE',
+    name,
+    genre
+  }
+}
+var removeMovie = (name) => {
+  return {
+    type: 'REMOVE_MOVIE',
+    name
   }
 }
 
@@ -51,6 +85,7 @@ var reducer = Redux.combineReducers({
   movies: moviesReducer
 });
 
+// STORE
 var store = Redux.createStore(reducer, Redux.compose(
   window.devToolsExtension ? window.devToolsExtension() : f => f
 ));
@@ -63,31 +98,14 @@ var unsubscribe = store.subscribe(() => {
 })
 //unsubscribe();
 
-store.dispatch({
-  type: 'CHANGE_NAME',
-  name: 'Katerina'
-})
-store.dispatch({
-  type: 'ADD_HOBBY',
-  hobby: 'Singing'
-})
-store.dispatch({
-  type: 'ADD_HOBBY',
-  hobby: 'Running'
-})
-store.dispatch({
-  type: 'ADD_HOBBY',
-  hobby: 'Makeup'
-})
-store.dispatch({
-  type: 'CHANGE_NAME',
-  name: 'Andrea'
-})
-store.dispatch({
-  type: 'REMOVE_HOBBY',
-  hobby: 'Running'
-})
-store.dispatch({
-  type: 'ADD_MOVIE',
-  movie: 'Finding Nemo'
-})
+
+// DISPATCHERS
+store.dispatch(changeName('Katerina'));
+store.dispatch(addHobby('Singing'));
+store.dispatch(addHobby('Running'));
+store.dispatch(addHobby('Makeup'));
+store.dispatch(addMovie('Mad Max', 'Science Fiction'));
+store.dispatch(changeName('Andrea'));
+store.dispatch(removeHobby('Running'));
+store.dispatch(removeMovie('Mad Max'))
+store.dispatch(addMovie('Finding Nemo', 'Family'));
